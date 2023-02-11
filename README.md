@@ -2,8 +2,8 @@
 
 This repository contains source code examples used to support my on-line courses about the Spring Framework.
 
-Spring generiert automatisch ein Passwort. Dies steht im Log. Der User heisst user
-Using generated security password: UUID
+Credentials stehen in den application.properties. Im wahren Leben mit Umgebungsvariablen ueberschreiben.
+Passwort steht nicht im Log.
 
 You can learn more about the courses here:
 * [Spring Security Core: Beginner to Guru](https://www.udemy.com/course/spring-security-core-beginner-to-guru/?referralCode=306F288EB78688C0F3BC)
