@@ -21,6 +21,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -56,7 +57,7 @@ public class BeerControllerIT {
                 .build();
     }
 
-    @WithMockUser()
+    @WithMockUser() // Authentication wird nicht geprüft, jeder User ist möglich
     @Test
     void findBeers() throws Exception{
         mockMvc.perform(get("/beers/find"))
@@ -64,5 +65,21 @@ public class BeerControllerIT {
                 .andExpect(view().name("beers/findBeers"))
                 .andExpect(model().attributeExists("beer"));
     }
+
+    @Test
+    void findBeersWithHttpAuthentication() throws Exception{
+        mockMvc.perform(get("/beers/find").with(httpBasic("myUser", "myPassword")))
+                .andExpect(status().isOk())
+                .andExpect(view().name("beers/findBeers"))
+                .andExpect(model().attributeExists("beer"));
+    }
+
+    @Test
+    void findBeersWithHttpAuthentication401() throws Exception{
+        mockMvc.perform(get("/beers/find").with(httpBasic("myUser1", "myPassword")))
+                .andExpect(status().isUnauthorized());
+    }
+
+
 
 }
