@@ -2,9 +2,14 @@ package guru.sfg.brewery.web;
 
 import net.bytebuddy.asm.Advice;
 import org.junit.jupiter.api.Test;
+import org.springframework.security.crypto.password.LdapShaPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.DigestUtils;
+
+import javax.naming.ldap.LdapContext;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class PasswordEncodingTests {
 
@@ -16,6 +21,21 @@ public class PasswordEncodingTests {
         System.out.println(noOpPasswordEncoder.encode(PASSWORD));
         System.out.println(noOpPasswordEncoder.encode(PASSWORD));
     }
+
+    @Test
+    public void testLdapPasswordEncoder() {
+        PasswordEncoder ldapPwEncoder = new LdapShaPasswordEncoder();
+        String encodedPassword1 = ldapPwEncoder.encode(PASSWORD);
+        System.out.println(encodedPassword1);
+        String encodedPassword2 = ldapPwEncoder.encode(PASSWORD);
+        System.out.println(encodedPassword2);
+
+
+        assertTrue(ldapPwEncoder.matches(PASSWORD, encodedPassword1));
+        assertTrue(ldapPwEncoder.matches(PASSWORD, encodedPassword2));
+
+    }
+
 
     // not recommended
     @Test
