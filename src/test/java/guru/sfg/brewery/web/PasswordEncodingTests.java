@@ -1,11 +1,21 @@
 package guru.sfg.brewery.web;
 
+import net.bytebuddy.asm.Advice;
 import org.junit.jupiter.api.Test;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.DigestUtils;
 
 public class PasswordEncodingTests {
 
     private final String PASSWORD = "password";
+
+    @Test
+    public void testNoOp() {
+        PasswordEncoder noOpPasswordEncoder = NoOpPasswordEncoder.getInstance();
+        System.out.println(noOpPasswordEncoder.encode(PASSWORD));
+        System.out.println(noOpPasswordEncoder.encode(PASSWORD));
+    }
 
     // not recommended
     @Test
