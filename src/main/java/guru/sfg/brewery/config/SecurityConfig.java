@@ -1,5 +1,6 @@
 package guru.sfg.brewery.config;
 
+import com.sun.xml.bind.api.impl.NameConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.ExampleMatcher;
@@ -15,6 +16,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.LdapShaPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.password.StandardPasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
 @Configuration
@@ -53,13 +55,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         auth.inMemoryAuthentication()
                 .withUser("myUser").password("myPassword").roles("ADMIN")
                 .and()
-                .withUser("user").password("{SSHA}yApLSJfTkAXVzwCII2TwOKAirvbd/Qc8Gj2qdg==").roles("USER")
+                .withUser("user").password("ad44629b24fe00779083148f8cc4be42430c1bfb21819e5b3cdb7ab7228bfd7bf1a70472e35049e3").roles("USER")
                 .and()
                 .withUser("scott").password("tiger").roles("CUSTOMER");
     }
 
     @Bean
     PasswordEncoder passwordEncoder() {
-        return new LdapShaPasswordEncoder();
+        return new StandardPasswordEncoder();
     }
 }

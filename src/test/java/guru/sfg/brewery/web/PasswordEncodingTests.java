@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.security.crypto.password.LdapShaPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.password.StandardPasswordEncoder;
 import org.springframework.util.DigestUtils;
 
 import javax.naming.ldap.LdapContext;
@@ -33,6 +34,20 @@ public class PasswordEncodingTests {
 
         assertTrue(ldapPwEncoder.matches(PASSWORD, encodedPassword1));
         assertTrue(ldapPwEncoder.matches(PASSWORD, encodedPassword2));
+
+    }
+
+    @Test
+    public void testSha256Encoder() {
+        PasswordEncoder pwe = new StandardPasswordEncoder();
+        String pwe1 = pwe.encode(PASSWORD);
+        String pwe2 = pwe.encode(PASSWORD);
+
+        System.out.println(pwe1);
+        System.out.println(pwe2);
+
+        assertTrue(pwe.matches(PASSWORD, pwe1));
+        assertTrue(pwe.matches(PASSWORD, pwe2));
 
     }
 

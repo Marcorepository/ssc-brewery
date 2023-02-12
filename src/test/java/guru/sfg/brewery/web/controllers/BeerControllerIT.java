@@ -40,7 +40,7 @@ public class BeerControllerIT extends BaseIT{
                 .andExpect(model().attributeExists("beer"));
     }
 
-    @Test
+    @Test // fail da nicht sha in SecurityConfig hinterlegt
     void findBeersWithHttpAuthentication() throws Exception{
         mockMvc.perform(get("/beers/find").with(httpBasic("myUser", "myPassword")))
                 .andExpect(status().isOk())
@@ -56,7 +56,7 @@ public class BeerControllerIT extends BaseIT{
                 .andExpect(model().attributeExists("beer"));
     }
 
-    @Test
+    @Test // fail da nicht sha in SecurityConfig hinterlegt
     void findBeersWithHttpAuthentication401() throws Exception{
         mockMvc.perform(get("/beers/find").with(httpBasic("myUser1", "myPassword")))
                 .andExpect(status().isUnauthorized());
