@@ -21,6 +21,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.anonymous;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -51,6 +52,25 @@ public class BeerControllerIT extends BaseIT{
     void findBeersWithHttpAuthentication401() throws Exception{
         mockMvc.perform(get("/beers/find").with(httpBasic("myUser1", "myPassword")))
                 .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void findBeersWithoutAuthentication() throws Exception{
+        mockMvc.perform(get("/beers/find"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("beers/findBeers"))
+                .andExpect(model().attributeExists("beer"));
+    }
+
+    @Test
+    void findBeersWithAnonymous() throws Exception{
+        mockMvc.perform(get("/beers/find").with(anonymous()))
+                .andExpect(status().isOk());
+    }
+    @Test
+    void findBeer() throws Exception{
+        mockMvc.perform(get("/beers?beerName=Mango Bobs").with(anonymous()))
+                .andExpect(status().isOk());
     }
 
 
