@@ -2,6 +2,7 @@ package guru.sfg.brewery.web;
 
 import net.bytebuddy.asm.Advice;
 import org.junit.jupiter.api.Test;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.LdapShaPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -44,6 +45,19 @@ public class PasswordEncodingTests {
         String pwe2 = pwe.encode(PASSWORD);
 
         System.out.println(pwe1);
+        System.out.println(pwe2);
+
+        assertTrue(pwe.matches(PASSWORD, pwe1));
+        assertTrue(pwe.matches(PASSWORD, pwe2));
+
+    }
+    @Test
+    public void testBCryptEncoderEncoder() {
+        PasswordEncoder pwe = new BCryptPasswordEncoder(14);
+        String pwe1 = pwe.encode(PASSWORD);
+        System.out.println(pwe1);
+
+        String pwe2 = pwe.encode(PASSWORD);
         System.out.println(pwe2);
 
         assertTrue(pwe.matches(PASSWORD, pwe1));
