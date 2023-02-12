@@ -16,6 +16,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests(authorize -> {
                     authorize.antMatchers("/", "/webjars/**", "/login", "/resources/**", "/beers/find", "/beers*").permitAll();
                     authorize.antMatchers(HttpMethod.GET, "/api/v1/beer/**").permitAll();
+                    authorize.mvcMatchers(HttpMethod.GET, "/api/v1/beerUpc/{upc}").permitAll();
                 } )
                 .authorizeRequests()
                 .anyRequest().authenticated()

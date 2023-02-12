@@ -31,6 +31,12 @@ public class BeerRestControllerIT extends BaseIT{
         mockMvc.perform(get("/api/v1/beer/4711").with(anonymous()))
                 .andExpect(status().isBadRequest());
     }
+    @Test
+    void findBeerByUpcWithAnonymous() throws Exception{
+        mockMvc.perform(get("/api/v1/beerUpc/4711").with(anonymous()))
+                .andExpect(status().isOk());
+    }
+
 
 
 
