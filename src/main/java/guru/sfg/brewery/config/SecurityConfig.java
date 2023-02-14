@@ -1,6 +1,7 @@
 package guru.sfg.brewery.config;
 
 import com.sun.xml.bind.api.impl.NameConverter;
+import guru.sfg.brewery.security.OwnPasswordEncoderFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.ExampleMatcher;
@@ -64,6 +65,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     PasswordEncoder passwordEncoder() {
-        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+
+        return OwnPasswordEncoderFactory.createPasswordEncoder();
     }
 }
