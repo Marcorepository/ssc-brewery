@@ -18,6 +18,25 @@ public class PasswordEncodingTests {
     private final String PASSWORD = "password";
 
     @Test
+    public void testDelegatePasswordEncoder() {
+        PasswordEncoder ldapPwEncoder = new LdapShaPasswordEncoder();
+        String encodedLdap = ldapPwEncoder.encode("myPassword");
+        System.out.println("myPassword with ladp");
+        System.out.println(encodedLdap);
+
+        PasswordEncoder sha256Encoder = new StandardPasswordEncoder();
+        String encodedSha256 = sha256Encoder.encode("tiger");
+        System.out.println("tiger with sha256");
+        System.out.println(encodedSha256);
+
+        PasswordEncoder bCryptEncoder = new BCryptPasswordEncoder();
+        String encodedBCrypt = bCryptEncoder.encode("password");
+        System.out.println("password with bCryptEncoder");
+        System.out.println(encodedBCrypt);
+
+    }
+
+    @Test
     public void testNoOp() {
         PasswordEncoder noOpPasswordEncoder = NoOpPasswordEncoder.getInstance();
         System.out.println(noOpPasswordEncoder.encode(PASSWORD));
