@@ -56,7 +56,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.inMemoryAuthentication()
-                .withUser("myUser").password("{ldap}KJOi5GDO6zxVdXyRWWxxSTc2yi51cXLzMc8KSg==").roles("ADMIN") //myPassword
+                .withUser("myUser").password("{ldap}{SSHA}zS1kwAy/Ha8dzI8jPfYf7fh0AeLl0+9rOYbezA==").roles("ADMIN") //myPassword
                 .and()
                 .withUser("user").password("{bcrypt}$2a$10$YwW/o18rFzYx.vHzlfLGLODFNW8V4rMxaySkAF57O9wsWQA0jDos.").roles("USER") //password
                 .and()
