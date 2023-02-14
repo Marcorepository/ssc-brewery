@@ -29,7 +29,7 @@ public class PasswordEncodingTests {
         System.out.println("tiger with sha256");
         System.out.println(encodedSha256);
 
-        PasswordEncoder bCryptEncoder = new BCryptPasswordEncoder();
+        PasswordEncoder bCryptEncoder = new BCryptPasswordEncoder(15);
         String encodedBCrypt = bCryptEncoder.encode("password");
         System.out.println("password with bCryptEncoder");
         System.out.println(encodedBCrypt);
