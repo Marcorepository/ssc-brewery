@@ -24,10 +24,10 @@ public class PasswordEncodingTests {
         System.out.println("myPassword with ladp");
         System.out.println(encodedLdap);
 
-        PasswordEncoder sha256Encoder = new StandardPasswordEncoder();
-        String encodedSha256 = sha256Encoder.encode("tiger");
-        System.out.println("tiger with sha256");
-        System.out.println(encodedSha256);
+        PasswordEncoder bCryptEncoder17 = new BCryptPasswordEncoder(17);
+        String encodedCryptEncoder17 = bCryptEncoder17.encode("tiger");
+        System.out.println("tiger with bycrypt17");
+        System.out.println(encodedCryptEncoder17);
 
         PasswordEncoder bCryptEncoder = new BCryptPasswordEncoder(15);
         String encodedBCrypt = bCryptEncoder.encode("password");

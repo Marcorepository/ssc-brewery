@@ -60,7 +60,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .withUser("user").password("{bcrypt}$2a$15$hugZAQQmmCEvAyV5qMhB3uXrIIsWKQDimb.Nki6HXVdIjuG4p0Xv2").roles("USER") //password
                 .and()
-                .withUser("scott").password("{sha256}5a1bd4a074380f01db919656a29b958e11141a25a786518e993fdadf29da29efc4ae4eed5240f9b9").roles("CUSTOMER"); // tiger
+                .withUser("scott").password("{bcrypt17}$2a$17$Zcx5wtIpuuKlY.cBcefmgu2CKdov0ZcEcmmLBeCrHSW6Fz.6TpWh6").roles("CUSTOMER"); // tiger
     }
 
     @Bean
