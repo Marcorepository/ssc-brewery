@@ -7,7 +7,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.anonymous;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest
@@ -36,6 +36,14 @@ public class BeerRestControllerIT extends BaseIT{
         mockMvc.perform(get("/api/v1/beerUpc/4711").with(anonymous()))
                 .andExpect(status().isOk());
     }
+
+    @Test
+    void deleteBeerWithoutAuth() throws Exception {
+        mockMvc.perform(delete("/api/v1/beer/97df0c39-90c4-4ae0-b663-453e8e19c311").with(anonymous()))
+                .andExpect(status().is2xxSuccessful());
+    }
+
+
 
 
 

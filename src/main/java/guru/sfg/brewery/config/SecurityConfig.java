@@ -28,11 +28,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        http.csrf().disable();
         http
                 .authorizeRequests(authorize -> {
                     authorize.antMatchers("/", "/webjars/**", "/login", "/resources/**", "/beers/find", "/beers*").permitAll();
+                    authorize.antMatchers(HttpMethod.DELETE, "/api/v1/beer/**").permitAll();
                     authorize.antMatchers(HttpMethod.GET, "/api/v1/beer/**").permitAll();
-                    authorize.mvcMatchers(HttpMethod.GET, "/api/v1/beerUpc/{upc}").permitAll();
+
+                    /*
+                    authorize.antMatchers(HttpMethod.DELETE, "/api/v1/beer/**").permitAll();
+                    authorize.antMatchers(HttpMethod.DELETE, "/api/v1/beer/*").permitAll();
+                    authorize.antMatchers(HttpMethod.PATCH, "/api/v1/beer/**").permitAll();
+                    authorize.antMatchers(HttpMethod.POST, "/api/v1/beer/**").permitAll();
+                    authorize.antMatchers(HttpMethod.PUT, "/api/v1/beer/**").permitAll();
+
+                     */
+                   // authorize.mvcMatchers(HttpMethod.GET, "/api/v1/beerUpc/{upc}").permitAll();
                 })
                 .authorizeRequests()
                 .anyRequest().authenticated()
