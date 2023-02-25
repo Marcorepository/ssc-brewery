@@ -1,5 +1,7 @@
 package guru.sfg.brewery.security;
 
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.event.InteractiveAuthenticationSuccessEvent;
@@ -18,6 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+@Slf4j
 public class RestHeaderAuthFilter extends AbstractAuthenticationProcessingFilter {
     public RestHeaderAuthFilter(String defaultFilterProcessesUrl) {
         super(defaultFilterProcessesUrl);
@@ -42,6 +45,7 @@ public class RestHeaderAuthFilter extends AbstractAuthenticationProcessingFilter
 
         System.out.println("attempt auth1");
         if (!StringUtils.isEmpty(userName)) {
+            // Bad Credentials werfen eine Exception, die im Filter gefangen und behandelt wird
             Authentication auth = this.getAuthenticationManager().authenticate(token);
             System.out.println("attempt auth2");
             return auth;
@@ -63,12 +67,17 @@ public class RestHeaderAuthFilter extends AbstractAuthenticationProcessingFilter
                 this.logger.debug("Request is to process authentication");
             }
 
-            Authentication authResult = this.attemptAuthentication(request, response);
-            if (authResult != null) {
-                this.successfulAuthentication(request, response, chain, authResult);
-            } else {
-                chain.doFilter(request, response);
+            try {
+                Authentication authResult = this.attemptAuthentication(request, response);
+                if (authResult != null) {
+                    this.successfulAuthentication(request, response, chain, authResult);
+                } else {
+                    chain.doFilter(request, response);
+                }
+            } catch (AuthenticationException authEx) {
+                unsuccessfulAuthentication(request, response, authEx);
             }
+
         }
     }
 
@@ -80,6 +89,17 @@ public class RestHeaderAuthFilter extends AbstractAuthenticationProcessingFilter
 
         SecurityContextHolder.getContext().setAuthentication(authResult);
 
+    }
+
+    @Override
+    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
+        SecurityContextHolder.clearContext();
+        if (this.log.isDebugEnabled()) {
+            this.log.debug("Authentication request failed: " + failed.toString(), failed);
+            this.log.debug("Updated SecurityContextHolder to contain null Authentication");
+        }
+
+        response.sendError(HttpStatus.UNAUTHORIZED.value(), HttpStatus.UNAUTHORIZED.getReasonPhrase());
     }
 
 
