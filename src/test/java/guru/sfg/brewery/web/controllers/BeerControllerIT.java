@@ -8,6 +8,7 @@ import guru.sfg.brewery.services.BeerService;
 import guru.sfg.brewery.services.BreweryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -27,7 +28,8 @@ import static org.springframework.security.test.web.servlet.setup.SecurityMockMv
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest
+// @WebMvcTest
+@SpringBootTest
 public class BeerControllerIT extends BaseIT{
 
 
@@ -42,7 +44,7 @@ public class BeerControllerIT extends BaseIT{
 
     @Test // fail da nicht sha in SecurityConfig hinterlegt
     void findBeersWithHttpAuthentication() throws Exception{
-        mockMvc.perform(get("/beers/find").with(httpBasic("myUser", "myPassword")))
+        mockMvc.perform(get("/beers/find").with(httpBasic("spring", "guru")))
                 .andExpect(status().isOk())
                 .andExpect(view().name("beers/findBeers"))
                 .andExpect(model().attributeExists("beer"));
