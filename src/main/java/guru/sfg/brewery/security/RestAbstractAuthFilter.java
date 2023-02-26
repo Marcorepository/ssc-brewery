@@ -47,10 +47,12 @@ public abstract class RestAbstractAuthFilter extends AbstractAuthenticationProce
 
 
         System.out.println("attempt auth1");
+        log.info("attempt auth1");
         if (!StringUtils.isEmpty(userName)) {
             // Bad Credentials werfen eine Exception, die im Filter gefangen und behandelt wird
             Authentication auth = this.getAuthenticationManager().authenticate(token);
             System.out.println("attempt auth2");
+            log.info("attempt auth2");
             return auth;
         } else {
             return null;

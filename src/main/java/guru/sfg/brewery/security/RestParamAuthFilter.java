@@ -31,6 +31,7 @@ public class RestParamAuthFilter extends RestAbstractAuthFilter {
 
     @Override
     protected String getUsername(HttpServletRequest httpServletRequest) {
+        log.info("getting apikey from parameters");
         return httpServletRequest.getParameter("apikey");
     }
 

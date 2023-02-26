@@ -34,6 +34,7 @@ public class RestHeaderAuthFilter extends RestAbstractAuthFilter {
 
     @Override
     protected String getUsername(HttpServletRequest httpServletRequest) {
+        log.info("getting Api-Key from header");
         return httpServletRequest.getHeader("Api-Key");
     }
 
