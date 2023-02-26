@@ -1,8 +1,10 @@
 package guru.sfg.brewery.config;
 
+import guru.sfg.brewery.security.JpaUserDetailService;
 import guru.sfg.brewery.security.OwnPasswordEncoderFactory;
 import guru.sfg.brewery.security.RestHeaderAuthFilter;
 import guru.sfg.brewery.security.RestParamAuthFilter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -31,9 +33,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return restParamAuthFilter;
     }
 
+
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-
 
 
 
@@ -79,8 +82,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
      */
 
+    /*
+    @Autowired
+    private JpaUserDetailService jpaUserDetailService;
+
+     */
+
+
+    /*
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+
+        // auth.userDetailsService(jpaUserDetailService);
+
         auth.inMemoryAuthentication()
                 .withUser("myUser").password("{ldap}{SSHA}zS1kwAy/Ha8dzI8jPfYf7fh0AeLl0+9rOYbezA==").roles("ADMIN") //myPassword
                 .and()
@@ -89,7 +103,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .withUser("scott").password("{bcrypt12}$2a$12$tq3773Ri0AU2DlLrumj75eEQ3y10hr9KbEn2Mdd862eFZsu6rpzF6").roles("CUSTOMER") // tiger
                 .and()
                 .withUser("spring").password("{bcrypt}$2a$11$Qn5fC3hpvvKH0V4TBONDyehobc./Dhrx8KD8czFhha9fFOEe.bJAe").roles("ADMIN");
-    }
+
+
+    }  */
+
+
 
     @Bean
     PasswordEncoder passwordEncoder() {
