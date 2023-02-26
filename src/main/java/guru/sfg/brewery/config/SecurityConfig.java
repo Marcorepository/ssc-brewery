@@ -42,6 +42,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable(); // dann braucht man kein csrf-token für put,delete,post
         http
                 .authorizeRequests(authorize -> {
+                    authorize.antMatchers("/h2-console/**").permitAll();
                     authorize.antMatchers("/", "/webjars/**", "/login", "/resources/**", "/beers/find", "/beers*").permitAll();
                     authorize.antMatchers(HttpMethod.DELETE, "/api/v1/beer/**").permitAll();
                     authorize.antMatchers(HttpMethod.GET, "/api/v1/beer/**").permitAll();
@@ -62,6 +63,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .formLogin().and()
                 .httpBasic();
+        // h2-console
+        http.headers().frameOptions().sameOrigin();
     }
 
     /*
