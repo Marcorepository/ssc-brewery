@@ -1,29 +1,18 @@
 package guru.sfg.brewery.config;
 
-import com.sun.xml.bind.api.impl.NameConverter;
 import guru.sfg.brewery.security.OwnPasswordEncoderFactory;
 import guru.sfg.brewery.security.RestHeaderAuthFilter;
+import guru.sfg.brewery.security.RestParamAuthFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
-import org.springframework.security.crypto.password.LdapShaPasswordEncoder;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.crypto.password.StandardPasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.util.matcher.AndRequestMatcher;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
@@ -36,16 +25,25 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return restHeaderAuthFilter;
     }
 
+    public RestParamAuthFilter restParamAuthFilter(AuthenticationManager authenticationManager) {
+        RestParamAuthFilter restParamAuthFilter = new RestParamAuthFilter(new AntPathRequestMatcher("/api/**"));
+        restParamAuthFilter.setAuthenticationManager(authenticationManager);
+        return restParamAuthFilter;
+    }
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
 
+
+
         http.addFilterBefore(restHeaderAuthFilter(authenticationManager()), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(restParamAuthFilter(authenticationManager()), RestHeaderAuthFilter.class);
         http.csrf().disable(); // dann braucht man kein csrf-token für put,delete,post
         http
                 .authorizeRequests(authorize -> {
                     authorize.antMatchers("/", "/webjars/**", "/login", "/resources/**", "/beers/find", "/beers*").permitAll();
-                    // authorize.antMatchers(HttpMethod.DELETE, "/api/v1/beer/**").permitAll();
+                    authorize.antMatchers(HttpMethod.DELETE, "/api/v1/beer/**").permitAll();
                     authorize.antMatchers(HttpMethod.GET, "/api/v1/beer/**").permitAll();
 
                     /*
