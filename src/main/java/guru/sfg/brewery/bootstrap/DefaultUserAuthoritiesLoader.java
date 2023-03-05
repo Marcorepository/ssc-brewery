@@ -31,9 +31,9 @@ public class DefaultUserAuthoritiesLoader implements CommandLineRunner {
         log.info("loading securityData");
         if (authorityRepository.count() == 0) {
             log.info("loading authorityData");
-            Authority admin = Authority.builder().role("ADMIN").build();
-            Authority userRole = Authority.builder().role("USER").build();
-            Authority customer = Authority.builder().role("CUSTOMER").build();
+            Authority admin = Authority.builder().role("ROLE_ADMIN").build();
+            Authority userRole = Authority.builder().role("ROLE_USER").build();
+            Authority customer = Authority.builder().role("ROLE_CUSTOMER").build();
             authorityRepository.saveAll(Arrays.asList(admin, userRole, customer));
 
             log.info("loading userData");
