@@ -40,7 +40,8 @@ public class DefaultUserAuthoritiesLoader implements CommandLineRunner {
             User userSpring = User.builder().username("spring").password(passwordEncoder.encode("guru")).authority(admin).build();
             User userUser = User.builder().username("user").password(passwordEncoder.encode("password")).authority(userRole).build();
             User userScott = User.builder().username("Scott").password(passwordEncoder.encode("tiger")).authority(customer).build();
-            userRepository.saveAll(Arrays.asList(userSpring, userUser, userScott));
+            User userCustomer = User.builder().username("customer").password(passwordEncoder.encode("password")).authority(customer).build();
+            userRepository.saveAll(Arrays.asList(userSpring, userUser, userScott, userCustomer));
 
             log.info("loaded authorities: " + authorityRepository.count() + " users: " + userRepository.count());
 

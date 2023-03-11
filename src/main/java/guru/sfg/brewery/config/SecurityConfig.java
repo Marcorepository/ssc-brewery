@@ -49,6 +49,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     authorize.antMatchers("/", "/webjars/**", "/login", "/resources/**", "/beers/find", "/beers*").permitAll();
                     authorize.antMatchers(HttpMethod.DELETE, "/api/v1/beer/**").hasRole("ADMIN");
                     authorize.antMatchers(HttpMethod.GET, "/api/v1/beer/**").permitAll();
+                    authorize.antMatchers(HttpMethod.GET, "/brewery/**").hasRole("CUSTOMER");
 
                     /*
                     authorize.antMatchers(HttpMethod.DELETE, "/api/v1/beer/**").permitAll();

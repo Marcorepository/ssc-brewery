@@ -100,6 +100,55 @@ public class BeerRestControllerIT extends BaseIT{
 
     }
 
+    @Test
+    void listBreweriesWithCustomerRoleSuccessful() throws Exception {
+        mockMvc
+                .perform(get("/brewery/api/v1/breweries")
+                        .with(httpBasic("customer", "password")))
+                .andExpect(status().is2xxSuccessful());
+    }
+
+    @Test
+    void listBreweriesIsUnahthorized() throws Exception {
+        mockMvc
+                .perform(get("/brewery/api/v1/breweries")
+                        .with(httpBasic("Scott", "4711")))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void listBreweriesIsForbidden() throws Exception {
+        mockMvc
+                .perform(get("/brewery/api/v1/breweries")
+                        .with(httpBasic("user", "password")))
+                .andExpect(status().isForbidden());
+    }
+
+
+    @Test
+    void breweriesIsUnahthorized() throws Exception {
+        mockMvc
+                .perform(get("/brewery/breweries")
+                        .with(httpBasic("Scott", "4711")))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void breweriesIsForbidden() throws Exception {
+        mockMvc
+                .perform(get("/brewery/breweries")
+                        .with(httpBasic("user", "password")))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    void breweriesWithCustomerRoleSuccessful() throws Exception {
+        mockMvc
+                .perform(get("/brewery/breweries")
+                        .with(httpBasic("customer", "password")))
+                .andExpect(status().is2xxSuccessful());
+    }
+
 
 
 
