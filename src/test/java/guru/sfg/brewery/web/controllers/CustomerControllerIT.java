@@ -19,6 +19,7 @@ import java.util.stream.Stream;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.anonymous;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
@@ -54,6 +55,36 @@ public class CustomerControllerIT extends BaseIT {
         @CsvSource({"user,password"})
         void findCustomersIsForbidden(String user, String pwd) throws Exception{
             mockMvc.perform(get("/customers/find")
+                            .with(httpBasic(user, pwd)))
+                    .andExpect(status().isForbidden());
+
+        }
+    }
+
+    @DisplayName("/customers/add")
+    @Nested
+    class AddCustomer{
+        @ParameterizedTest(name = "#{index} with [{arguments}]")
+        @CsvSource({"spring,guru"}) // admin
+        void processCreationForm(String user, String pwd) throws Exception{
+            mockMvc.perform(post("/customers/new")
+                            .param("customerName", "customerFoo1")
+                            .with(httpBasic(user, pwd)))
+                    .andExpect(status().is3xxRedirection());
+        }
+
+        @Test
+        void processCreationFormWithAnonymous() throws Exception{
+            mockMvc.perform(post("/customers/new")
+                            .param("customerName", "customerFoo1")
+                            .with(anonymous()))
+                    .andExpect(status().isUnauthorized());
+        }
+
+        @ParameterizedTest(name = "#{index} with [{arguments}]")
+        @MethodSource("guru.sfg.brewery.web.controllers.CustomerControllerIT#getStreamNotAdmin")
+        void processCreationFormIsForbidden(String user, String pwd) throws Exception{
+            mockMvc.perform(post("/customers/new")
                             .with(httpBasic(user, pwd)))
                     .andExpect(status().isForbidden());
 
