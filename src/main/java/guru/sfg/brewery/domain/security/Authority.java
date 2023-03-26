@@ -1,33 +1,27 @@
-package guru.sfg.brewery.security;
+package guru.sfg.brewery.domain.security;
 
 import lombok.*;
 
 import javax.persistence.*;
 import java.util.Set;
 
-// Do not use @Data with manyToMany
-@Getter
+/**
+ * Created by jt on 6/21/20.
+ */
 @Setter
-@NoArgsConstructor
+@Getter
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
 @Entity
 public class Authority {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", nullable = false)
-    private Long id;
+    private Integer id;
 
     private String role;
 
     @ManyToMany(mappedBy = "authorities")
     private Set<User> users;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 }

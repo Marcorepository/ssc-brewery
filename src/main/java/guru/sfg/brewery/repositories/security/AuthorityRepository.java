@@ -1,9 +1,10 @@
 package guru.sfg.brewery.repositories.security;
 
-import guru.sfg.brewery.security.Authority;
+import guru.sfg.brewery.domain.security.Authority;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
-
-public interface AuthorityRepository extends JpaRepository<Authority, Long> {
+/**
+ * Created by jt on 6/21/20.
+ */
+public interface AuthorityRepository extends JpaRepository<Authority, Integer> {
 }

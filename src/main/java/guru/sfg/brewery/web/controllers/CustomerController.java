@@ -44,14 +44,14 @@ public class CustomerController {
     private final CustomerRepository customerRepository;
 
     @RequestMapping("/find")
-    @Secured({"ROLE_ADMIN", "ROLE_CUSTOMER"})
+    @PreAuthorize("hasRole('ADMIN') or hasRole('CUSTOMER')")
     public String findCustomers(Model model){
         model.addAttribute("customer", Customer.builder().build());
         return "customers/findCustomers";
     }
 
     @GetMapping
-    @Secured({"ROLE_ADMIN", "ROLE_CUSTOMER"})
+    @PreAuthorize("hasRole('ADMIN') or hasRole('CUSTOMER')")
     public String processFindFormReturnMany(Customer customer, BindingResult result, Model model){
         // find customers by name
         //ToDO: Add Service
