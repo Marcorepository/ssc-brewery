@@ -1,93 +1,79 @@
 package guru.sfg.brewery.web.controllers;
 
-import guru.sfg.brewery.domain.Beer;
-import guru.sfg.brewery.repositories.CustomerRepository;
-import guru.sfg.brewery.web.controllers.BaseIT;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.junit.jupiter.params.provider.ValueSource;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
 
-import java.util.stream.Stream;
-
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.anonymous;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
- * Created by jt on 6/12/20.
+ * Created by jt on 6/27/20.
  */
 @SpringBootTest
 public class CustomerControllerIT extends BaseIT {
 
-    @Autowired
-    CustomerRepository customerRepository;
-
-
-    @DisplayName("/customers/find")
+    @DisplayName("List Customers")
     @Nested
-    class FindForm{
+    class ListCustomers{
         @ParameterizedTest(name = "#{index} with [{arguments}]")
-        @MethodSource("guru.sfg.brewery.web.controllers.CustomerControllerIT#getStreamAdminCustomer")
-        void findCustomersFormAUTH(String user, String pwd) throws Exception{
-            mockMvc.perform(get("/customers/find")
+        @MethodSource("guru.sfg.brewery.web.controllers.BeerControllerIT#getStreamAdminCustomer")
+        void testListCustomersAUTH(String user, String pwd) throws Exception {
+            mockMvc.perform(get("/customers")
                     .with(httpBasic(user, pwd)))
-                    .andExpect(status().isOk())
-                    .andExpect(view().name("customers/findCustomers"))
-                    .andExpect(model().attributeExists("customer"));
+                    .andExpect(status().isOk());
+
         }
 
         @Test
-        void findCustomersWithAnonymous() throws Exception{
-            mockMvc.perform(get("/customers/find").with(anonymous()))
-                    .andExpect(status().isUnauthorized());
+        void testListCustomersNOTAUTH() throws Exception {
+            mockMvc.perform(get("/customers")
+                    .with(httpBasic("user", "password")))
+                    .andExpect(status().isForbidden());
         }
 
-        @ParameterizedTest(name = "#{index} with [{arguments}]")
-        @CsvSource({"user,password"})
-        void findCustomersIsForbidden(String user, String pwd) throws Exception{
-            mockMvc.perform(get("/customers/find")
-                            .with(httpBasic(user, pwd)))
-                    .andExpect(status().isForbidden());
+        @Test
+        void testListCustomersNOTLOGGEDIN() throws Exception {
+            mockMvc.perform(get("/customers"))
+                    .andExpect(status().isUnauthorized());
 
         }
     }
 
-    @DisplayName("/customers/add")
+    @DisplayName("Add Customers")
     @Nested
-    class AddCustomer{
-        @ParameterizedTest(name = "#{index} with [{arguments}]")
-        @CsvSource({"spring,guru"}) // admin
-        void processCreationForm(String user, String pwd) throws Exception{
+    class AddCustomers {
+
+        @Rollback
+        @Test
+        void processCreationForm() throws Exception{
             mockMvc.perform(post("/customers/new")
-                            .param("customerName", "customerFoo1")
-                            .with(httpBasic(user, pwd)))
+                    .param("customerName", "Foo Customer")
+                    .with(httpBasic("spring", "guru")))
                     .andExpect(status().is3xxRedirection());
         }
 
-        @Test
-        void processCreationFormWithAnonymous() throws Exception{
+        @Rollback
+        @ParameterizedTest(name = "#{index} with [{arguments}]")
+        @MethodSource("guru.sfg.brewery.web.controllers.BeerControllerIT#getStreamNotAdmin")
+        void processCreationFormNOTAUTH(String user, String pwd) throws Exception{
             mockMvc.perform(post("/customers/new")
-                            .param("customerName", "customerFoo1")
-                            .with(anonymous()))
-                    .andExpect(status().isUnauthorized());
+                    .param("customerName", "Foo Customer2")
+                    .with(httpBasic(user, pwd)))
+                    .andExpect(status().isForbidden());
         }
 
-        @ParameterizedTest(name = "#{index} with [{arguments}]")
-        @MethodSource("guru.sfg.brewery.web.controllers.CustomerControllerIT#getStreamNotAdmin")
-        void processCreationFormIsForbidden(String user, String pwd) throws Exception{
+        @Test
+        void processCreationFormNOAUTH() throws Exception{
             mockMvc.perform(post("/customers/new")
-                            .with(httpBasic(user, pwd)))
-                    .andExpect(status().isForbidden());
-
+                    .param("customerName", "Foo Customer"))
+                    .andExpect(status().isUnauthorized());
         }
     }
 

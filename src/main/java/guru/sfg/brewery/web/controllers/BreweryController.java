@@ -33,18 +33,18 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/brewery")
 @Controller
-@PreAuthorize("hasAnyRole('CUSTOMER', 'ADMIN')")
 public class BreweryController {
 
     private final BreweryService breweryService;
 
-    // @PreAuthorize("hasAnyRole('CUSTOMER', 'ADMIN')")
+    @PreAuthorize("hasAuthority('brewery.read')")
     @GetMapping({"/breweries", "/breweries/index", "/breweries/index.html", "/breweries.html"})
     public String listBreweries(Model model) {
         model.addAttribute("breweries", breweryService.getAllBreweries());
         return "breweries/index";
     }
 
+    @PreAuthorize("hasAuthority('brewery.read')")
     @GetMapping("/api/v1/breweries")
     public @ResponseBody List<Brewery> getBreweriesJson(){
         return breweryService.getAllBreweries();
