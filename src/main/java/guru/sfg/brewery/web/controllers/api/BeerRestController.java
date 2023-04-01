@@ -36,6 +36,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+@PreAuthorize("hasAnyRole('USER', 'CUSTOMER', 'ADMIN')")
 @Slf4j
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/")
