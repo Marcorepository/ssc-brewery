@@ -31,10 +31,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                             // .mvcMatchers(HttpMethod.DELETE, "/api/v1/beer/**").hasRole("ADMIN") -> secured with method annotation
                             .mvcMatchers(HttpMethod.GET, "/api/v1/beerUpc/{upc}")
                                 .hasAnyRole("ADMIN", "CUSTOMER", "USER")
-                            .mvcMatchers("/brewery/breweries")
-                                .hasAnyRole("ADMIN", "CUSTOMER")
-                            .mvcMatchers(HttpMethod.GET, "/brewery/api/v1/breweries")
-                                .hasAnyRole("ADMIN", "CUSTOMER")
+                            //.mvcMatchers("/brewery/breweries")
+                              //  .hasAnyRole("ADMIN", "CUSTOMER") -> class Annotation
+                            //.mvcMatchers(HttpMethod.GET, "/brewery/api/v1/breweries")
+                              //  .hasAnyRole("ADMIN", "CUSTOMER") > class Annotation
                             .mvcMatchers("/beers/find", "/beers/{beerId}")
                                 .hasAnyRole("ADMIN", "CUSTOMER", "USER");
                 } )
