@@ -16,6 +16,8 @@ public class BeerAuthenticationManager {
 
     public boolean customerIdMatches(Authentication authentication, UUID customerId) {
         User user = (User) authentication.getPrincipal();
-        return user.getId().equals(customerId);
+
+        log.debug("Auth User Customer Id: " + user.getCustomer().getId() + " Customer Id:" + customerId);
+        return user.getCustomer().getId().equals(customerId);
     }
 }

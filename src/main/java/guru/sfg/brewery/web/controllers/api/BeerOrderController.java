@@ -17,12 +17,16 @@
 
 package guru.sfg.brewery.web.controllers.api;
 
+import guru.sfg.brewery.security.BeerAuthenticationManager;
 import guru.sfg.brewery.services.BeerOrderService;
 import guru.sfg.brewery.web.model.BeerOrderDto;
 import guru.sfg.brewery.web.model.BeerOrderPagedList;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpStatusCodeException;
 
 import java.util.UUID;
 
@@ -42,10 +46,16 @@ public class BeerOrderController {
         this.beerOrderService = beerOrderService;
     }
 
+    @PreAuthorize("hasAuthority('order.read') OR " +
+                  "hasAuthority('customer.order.read') " +
+                  "AND @beerAuthenticationManager.customerIdMatches(authentication, #customerId)")
     @GetMapping("orders")
     public BeerOrderPagedList listOrders(@PathVariable("customerId") UUID customerId,
                                          @RequestParam(value = "pageNumber", required = false) Integer pageNumber,
                                          @RequestParam(value = "pageSize", required = false) Integer pageSize){
+
+
+
 
         if (pageNumber == null || pageNumber < 0){
             pageNumber = DEFAULT_PAGE_NUMBER;
@@ -58,12 +68,18 @@ public class BeerOrderController {
         return beerOrderService.listOrders(customerId, PageRequest.of(pageNumber, pageSize));
     }
 
+    @PreAuthorize("hasAuthority('order.read') OR " +
+            "hasAuthority('customer.order.read') " +
+            "AND @beerAuthenticationManager.customerIdMatches(authentication, #customerId)")
     @PostMapping("orders")
     @ResponseStatus(HttpStatus.CREATED)
     public BeerOrderDto placeOrder(@PathVariable("customerId") UUID customerId, @RequestBody BeerOrderDto beerOrderDto){
         return beerOrderService.placeOrder(customerId, beerOrderDto);
     }
 
+    @PreAuthorize("hasAuthority('order.read') OR " +
+            "hasAuthority('customer.order.read') " +
+            "AND @beerAuthenticationManager.customerIdMatches(authentication, #customerId)")
     @GetMapping("orders/{orderId}")
     public BeerOrderDto getOrder(@PathVariable("customerId") UUID customerId, @PathVariable("orderId") UUID orderId){
         return beerOrderService.getOrderById(customerId, orderId);
