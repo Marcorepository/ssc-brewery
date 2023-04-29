@@ -29,12 +29,12 @@
 
 
 
-<div class="row">
+<div class="row" sec:authorize="!isAuthenticated()">
     <div class="col-md-12">
 
         <p th:if="${loginError}" class="error">Wrong Username or password</p>
         <form th:action="@{/login}" method="post">
-            <label for="username">Username:</label>
+            <label for="username">Username (huh):</label>
             <input type="text" id="username" name="username" autofocus="true" autocomplete="off">
             <label for="password">Password:</label>
             <input type="password" id="password" name="password" autofocus="true" autocomplete="off">
@@ -43,11 +43,11 @@
     </div>
 </div>
 
-<div class="row">
+<div class="row" sec:authorize="isAuthenticated()">
     <div class="col-md-12">
 
-        <p sec:authorize="isAuthenticated()" th:text="'Welcome: ' + ${#authentication?.principal?.username}">User</p>
-        <p><a th:href="@{/login}" >Logout</a></p>
+        <p  th:text="'Welcome/Willkommen: ' + ${#authentication?.principal?.username}">User</p>
+        <p><a th:href="@{/logout}" >Logout</a></p>
     </div>
 </div>
 
