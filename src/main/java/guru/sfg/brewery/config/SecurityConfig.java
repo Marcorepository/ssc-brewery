@@ -22,7 +22,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
-                http
+        http
                 .authorizeRequests(authorize -> {
                     authorize
                             .antMatchers("/h2-console/**").permitAll() //do not use in production!
@@ -31,25 +31,25 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .anyRequest().authenticated()
                 .and()
-                .formLogin(httpSecurityFormLoginConfigurer -> {
-                    httpSecurityFormLoginConfigurer.loginProcessingUrl("/login")
+                .formLogin(loginConfigurer -> {
+                    loginConfigurer
+                            .loginProcessingUrl("/login")
                             .loginPage("/").permitAll()
                             .successForwardUrl("/")
                             .defaultSuccessUrl("/")
-                            .failureForwardUrl("/?error");
-
-                }).logout(httpSecurityLogoutConfigurer -> {
-                            httpSecurityLogoutConfigurer.logoutRequestMatcher(new AntPathRequestMatcher("/logout","GET"))
-                                    .logoutUrl("/?logout")
-                                    .permitAll();
-                        })
-
+                            .failureUrl("/?error");
+                })
+                .logout(logoutConfigurer -> {
+                    logoutConfigurer
+                            .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET"))
+                            .logoutSuccessUrl("/?logout")
+                            .permitAll();
+                })
                 .httpBasic()
-                //.and().csrf().disable();
-                .and().csrf().ignoringAntMatchers("h2-console", "/api/**"); // kein csrf-token für h2-Console und Rest-API
+                .and().csrf().ignoringAntMatchers("/h2-console/**", "/api/**");
 
-                //h2 console config
-                http.headers().frameOptions().sameOrigin();
+        //h2 console config
+        http.headers().frameOptions().sameOrigin();
     }
 
     @Bean
